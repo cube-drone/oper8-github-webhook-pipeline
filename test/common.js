@@ -6,39 +6,6 @@ const randomIP = () => {
     return [1,2,3,4].map(() => Math.floor(Math.random() * 255)).join('.');
 };
 
-const redirect = async (fn) => {
-    try{
-        await fn();
-        throw new Error("function didn't redirect!");
-    }
-    catch(err){
-        if(err?.response?.status == 302){
-            return err.response.headers.location;
-        }
-        else{
-            throw err;
-        }
-    }
-}
-
-const redirectAndGetCookie = async (fn) => {
-    try{
-        await fn();
-        throw new Error("function didn't redirect!");
-    }
-    catch(err){
-        if(err?.response?.status == 302){
-        return {
-            redirectLocation: err.response.headers.location,
-            cookies: err.response.headers['set-cookie']
-        }
-    }
-    else{
-        throw err;
-    }
-  }
-}
-
 const http = axios.create({
     baseURL,
     timeout: 5000,

@@ -9,7 +9,7 @@ describe('Test the foo system', async function () {
             let response = await http.get('/ping')
             assert.strictEqual(response.data, "pong")
         });
-        it('connects to databases and such', async function () {
+        it('test endpoint is available', async function () {
             let response = await http.get('/test')
             assert.strictEqual(response.data, ":)")
         });
