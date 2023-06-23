@@ -6,22 +6,7 @@ task('default', async () => {
     return run("npx jake -T")
 });
 
-const setup = async () => {
-    let {setup} = require('./index')
-    await setup({
-        nodeEnv: process.env.NODE_ENV || "development",
-        redisUrl: process.env.TEMPL8_REDIS_URL || process.env.REDIS_URL ||
-            "redis://localhost:6379",
-        postgresConnectionString: process.env.TEMPL8_POSTGRES_URL || process.env.POSTGRES_URL ||
-            "postgres://postgres:example@localhost:5432/templ8",
-    })
-}
-
-desc("Build the database")
-task('setup', setup)
-
 const start = async () => {
-    await run("docker-compose up -d")
     await run("nodemon bin.js")
 }
 desc("Boot up the server.")
@@ -29,12 +14,7 @@ task('start', start)
 
 desc("unbootup the server")
 task('clean', async () => {
-    await run("docker-compose down")
-})
-
-desc("load local secrets")
-task('secrets', async () => {
-    console.log("run 'source .secrets.sh' to load local secrets")
+    // nothing to clean
 })
 
 desc("run tests")
@@ -43,9 +23,6 @@ task('test', async () => {
 })
 
 const cleanTest = async () => {
-    await run("docker-compose down")
-    await run("docker-compose up -d")
-    await setup()
     let proc = runBg("node bin.js")
 
     let success = false

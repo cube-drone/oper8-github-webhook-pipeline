@@ -17,8 +17,6 @@ const defaultUserAgent = "Pozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KH
 module.exports = {
     baseURL,
     randomIP,
-    redirect,
-    redirectAndGetCookie,
     http,
     defaultUserAgent,
 }

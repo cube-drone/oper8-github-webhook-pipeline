@@ -1,18 +1,46 @@
 const express = require('express')
-const crypto = require('crypto')
 require('express-async-errors') // this patches better async error handling into express
 const app = express()
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
 const assert = require('assert')
 
-const { Redis } = require("ioredis")
-
 const jsonParser = bodyParser.json()
 const urlencodedParser = bodyParser.urlencoded({ extended: false })
 
 //--------------------------
 async function main({nodeEnv, envPort, webhookUrl}){
+
+    let report = async (text) => {
+        if(webhookUrl){
+            let axios = require('axios');
+            let postMessage = {
+                text
+            }
+            let response = await axios.post(webhookUrl, postMessage);
+            return response.data;
+        }
+        else{
+            console.log(text)
+        }
+    }
+
+    let githubToPlainText = (githubMessage) => {
+
+        // this is the default text if we don't know what to do with the message
+        let action = githubMessage.action || "unknown action"
+        let sender = githubMessage.sender && githubMessage.sender.login || "unknown sender"
+        let repo = githubMessage.repository && githubMessage.repository.full_name || "unknown repo"
+
+        let remainingData = githubMessage;
+        delete remainingData.action;
+        delete remainingData.sender;
+        delete remainingData.repository;
+
+        let defaultMessage = `github webhook: ${action} by ${sender} on ${repo}: ${JSON.stringify(remainingData)}`
+
+        return defaultMessage;
+    }
 
     // we are going to deploy this behind nginx
     app.set('trust proxy', true)
@@ -55,13 +83,11 @@ async function main({nodeEnv, envPort, webhookUrl}){
     app.get('/webhook', jsonParser, async function (req, res) {
 
         let githubMessage = req.body;
-        let text = JSON.stringify(githubMessage, null, 2);
+        let text = githubToPlainText(githubMessage);
 
-        let message = {
-            text
-        };
+        await report(text);
 
-        res.send(message);
+        res.json({text});
     });
 
     app.listen(envPort)
