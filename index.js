@@ -37,7 +37,9 @@ async function main({nodeEnv, envPort, webhookUrl, version}){
         delete remainingData.sender;
         delete remainingData.repository;
 
-        let defaultMessage = `github webhook: ${action} by ${sender} on ${repo}: ${JSON.stringify(remainingData)}`
+        let defaultMessage = `github webhook: ${action} by ${sender} on ${repo}`
+        console.log(defaultMessage);
+        console.dir(remainingData);
 
         return defaultMessage;
     }
