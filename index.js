@@ -82,6 +82,10 @@ async function main({nodeEnv, envPort, webhookUrl}){
 
     app.get('/webhook', jsonParser, async function (req, res) {
 
+        res.json({"hey": "you have to POST to the webhook, silly"});
+    });
+    app.post('/webhook', jsonParser, async function (req, res) {
+
         let githubMessage = req.body;
         let text = githubToPlainText(githubMessage);
 

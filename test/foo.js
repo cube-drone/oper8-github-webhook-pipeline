@@ -13,6 +13,13 @@ describe('Test the foo system', async function () {
             let response = await http.get('/test')
             assert.strictEqual(response.data, ":)")
         });
+        it('i can post to the webhook url', async function(){
+            let response = await http.post('/webhook', {
+                'action': 'test',
+                'sender': 'testy-jim',
+                'repo': 'who knows',
+            });
+        });
     });
 
 })
