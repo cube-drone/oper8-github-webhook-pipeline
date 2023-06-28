@@ -4,6 +4,7 @@ let { main } = require('./index')
 
 const nodeEnv = process.env.NODE_ENV || "development";
 const envPort = process.env.TEMPL8_PORT || process.env.PORT || 9494;
+const version = process.env.NPM_VERSION || "?.?.?";
 const webhookUrl = process.env.INFO_WEBHOOK_URL;
 
 if(webhookUrl == null && nodeEnv == "production"){
@@ -12,7 +13,7 @@ if(webhookUrl == null && nodeEnv == "production"){
 }
 
 // take arguments and do various tasks:
-main({nodeEnv, envPort, webhookUrl})
+main({nodeEnv, envPort, webhookUrl, version})
     .catch((err) => {
         console.error(err)
         process.exit(1)

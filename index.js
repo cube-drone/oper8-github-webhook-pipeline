@@ -9,7 +9,7 @@ const jsonParser = bodyParser.json()
 const urlencodedParser = bodyParser.urlencoded({ extended: false })
 
 //--------------------------
-async function main({nodeEnv, envPort, webhookUrl}){
+async function main({nodeEnv, envPort, webhookUrl, version}){
 
     let report = async (text) => {
         if(webhookUrl){
@@ -70,6 +70,10 @@ async function main({nodeEnv, envPort, webhookUrl}){
     app.get('/test', async function (req, res) {
         res.send(":)")
     })
+    
+    app.get('/version', async function (req, res){
+        res.send(version);
+    });
 
     app.get('/env', async function (req, res) {
         if(nodeEnv === "production"){
