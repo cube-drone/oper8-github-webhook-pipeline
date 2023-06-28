@@ -40,6 +40,21 @@ async function main({nodeEnv, envPort, webhookUrl, version}){
         let defaultMessage = `github webhook: ${action} by ${sender} on ${repo}`
         console.log(defaultMessage);
         console.dir(remainingData);
+        
+        if(action == 'published'){
+            let package = remainingData.package;
+            let namespace = package.namespace;
+            let name = package.name;
+            let version = package.package_version.name;
+            let packageString = `@${namespace}/${name}:${version}`;
+
+            return `github webhook: published ${packageString}`;
+        }
+        if(githubMessage.commits && githubMessage.commits.length > 0){
+            let messages = githubMessage.commits.map(commit => { return `* ${commit.message}\n`; });
+
+            return `github commit: ${sender} on ${repo}: \n${messages}`;
+        }
 
         return defaultMessage;
     }
